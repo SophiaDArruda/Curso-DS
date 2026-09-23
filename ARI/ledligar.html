@@ -1,0 +1,55 @@
+<!DOCKTYPE html>
+<html lang="pt-br"
+
+<head>
+ <meta charset="UTF-8"
+ <title>Controle arduino Sophia e Mariane</title>
+
+</head>
+
+<body>
+ <h1>Controle de LED Sophia e Mariane</h1>
+ <button id="conectar">Conectar arduino</button>
+ <br><br>
+ <button id="ligar">Ligar o LED</button>
+ <button id="desligar">Desligar o LED</button>
+
+ <p id="status">Led Desligado</p>
+ <script>
+    let porta;
+    let escritor;
+
+    document.getElementById("conectar").addEventListener("click", async () => {
+        porta = await navigator.serial.requestPort();
+        
+        await porta.open({
+            baudRate: 9600
+    });
+
+     
+    escritor = porta.writable.getWriter();
+    
+    document.getElementById("status").innerText =
+    "Arduino conectado";
+    });
+
+    document.getElementById("ligar").addEventListener("click", async () => {
+        const comando = new TextEncoder().encode("1");
+        await escritor.write(comando);
+        document.getElementById("status").innerText =
+        "LED ligado";
+    });
+  
+    document.getElementById("desligar").addEventListener("click", async () => {
+        const comando = new TextEncoder().encode("0");
+        await escritor.write(comando);
+        document.getElementById("status").innerText =
+        "LED desligado";
+  });
+
+
+ </script>
+
+
+
+</body>
